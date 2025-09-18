@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _hoverIndex = -1; // باش نعرف وين راهي الفأرة
+  final List<String> items = ["Home", "About", "Shop", "Contact"];
 
   @override
   Widget build(BuildContext context) {
@@ -15,76 +23,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             // Start  Contact Widget
-            Container(
-              width: width,
-
-              color: const Color.fromARGB(255, 1, 85, 3),
-              height: 40,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: width,
-                    height: 40,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          child: Text(
-                            "Contact us +213658948791",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(
-                          child: Row(
-                            children: [
-                              Text(
-                                "If you want to make a website ",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Text(
-                                "https://electro-daimn-house.web.app/",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          child: Row(
-                            children: [
-                              IconButton(
-                                color: Colors.white,
-                                onPressed: () {},
-                                icon: Icon(FontAwesomeIcons.tiktok),
-                              ),
-                              IconButton(
-                                color: Colors.white,
-                                onPressed: () {},
-                                icon: Icon(FontAwesomeIcons.facebook),
-                              ),
-                              IconButton(
-                                color: Colors.white,
-                                onPressed: () {},
-                                icon: Icon(FontAwesomeIcons.twitter),
-                              ),
-                              IconButton(
-                                color: Colors.white,
-                                onPressed: () {},
-                                icon: Icon(FontAwesomeIcons.instagram),
-                              ),
-                              IconButton(
-                                color: Colors.white,
-                                onPressed: () {},
-                                icon: Icon(FontAwesomeIcons.linkedin),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ), // End  Contact Widget
+            ContactWidget(width: width), // End  Contact Widget
             SizedBox(height: 10),
             // Satrt  AppBAr Widget
             Container(
@@ -96,32 +35,62 @@ class HomePage extends StatelessWidget {
                 children: [
                   Image.asset("lib/res/images/logo.png"),
                   SizedBox(
+                    width: width - 400,
+                    height: 40,
                     child: Row(
-                      children: [
-                        Text("Home"),
-                        SizedBox(width: 10),
-                        Text("Home"),
-                        SizedBox(width: 10),
-                        Text("Home"),
-                        SizedBox(width: 10),
-                        Text("Home"),
-                        SizedBox(width: 10),
-                        Text("Home"),
-                        SizedBox(width: 10),
-                        Text("Home"),
-                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(items.length, (index) {
+                        return MouseRegion(
+                          onEnter: (_) {
+                            _hoverIndex = index;
+                            setState(() {});
+                          },
+                          onExit: (_) {
+                            _hoverIndex = -1;
+                            setState(() {});
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  items[index],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  height: 2,
+                                  width: _hoverIndex == index ? 40 : 0,
+                                  color: Colors.green.shade900,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
                     ),
                   ),
                   SizedBox(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
                           onPressed: () {},
                           icon: Icon(FontAwesomeIcons.user),
                         ),
+                        SizedBox(width: 20),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(FontAwesomeIcons.user),
+                          icon: Icon(FontAwesomeIcons.heart),
+                        ),
+                        SizedBox(width: 20),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(FontAwesomeIcons.message),
                         ),
                       ],
                     ),
@@ -154,6 +123,85 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ContactWidget extends StatelessWidget {
+  const ContactWidget({super.key, required this.width});
+
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      color: const Color.fromARGB(255, 1, 85, 3),
+      height: 40,
+      child: Row(
+        children: [
+          SizedBox(
+            width: width,
+            height: 40,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                  child: Text(
+                    "Contact us +213658948791",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                SizedBox(
+                  child: Row(
+                    children: [
+                      Text(
+                        "If you want to make a website ",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "https://electro-daimn-house.web.app/",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  child: Row(
+                    children: [
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () {},
+                        icon: Icon(FontAwesomeIcons.tiktok),
+                      ),
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () {},
+                        icon: Icon(FontAwesomeIcons.facebook),
+                      ),
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () {},
+                        icon: Icon(FontAwesomeIcons.twitter),
+                      ),
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () {},
+                        icon: Icon(FontAwesomeIcons.instagram),
+                      ),
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () {},
+                        icon: Icon(FontAwesomeIcons.linkedin),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
