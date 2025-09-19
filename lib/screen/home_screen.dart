@@ -20,6 +20,12 @@ class _HomePageState extends State<HomePage> {
     "lib/res/images/3.png",
     "lib/res/images/4.jpg",
   ];
+  final Map<String, String> typeMap = {
+    'All': 'All',
+    'Web Apps': 'web', // تأكد أن 'web' هو نفس القيمة في model
+    'Mobile Apps': 'Mobile', // أو 'mobile' حسب ما تحفظ في project.type
+    'Desktop App': 'Desktop',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +48,6 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Image.asset("lib/res/images/logo.png"),
                   SizedBox(
-                    width: width - 400,
-                    height: 40,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(items.length, (index) {
@@ -107,55 +111,154 @@ class _HomePageState extends State<HomePage> {
             ),
             // End  AppBAr Widget
             // Satrt  CarouselSlider imahge Widget
+            CarouselWidget(width: width, imgList: imgList),
+            // End  CarouselSlider imahge Widget
+            SizedBox(height: 10),
+            // Satrt  Products Widget
             SizedBox(
-              height: 200,
-              width: width,
-              child: Stack(
+              height: height,
+              width: width - 250,
+              child: Column(
                 children: [
-                  CarouselSlider(
-                    options: CarouselOptions(
-                      height: 200,
-                      autoPlay: true, // ✅ يتحرك تلقائي
-                      autoPlayInterval: Duration(seconds: 3), // مدة كل صورة
-                      autoPlayAnimationDuration: Duration(milliseconds: 800),
-                      enlargeCenterPage: true, // يكبر الصورة الوسطى
-                      viewportFraction: 0.9, // عرض كل صورة
-                    ),
-                    items:
-                        imgList
-                            .map(
-                              (item) => Container(
-                                margin: EdgeInsets.all(5.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    item,
-                                    fit: BoxFit.cover,
-                                    width: width,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                  ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  SizedBox(
+                    height: 40,
+                    width: width,
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .spaceBetween, // يخلي واحد يسار وواحد يمين
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "Shop",
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w700,
+                        // اليسار
+                        SizedBox(
+                          child: const Text("Showing 1-12 of 2560 results"),
+                        ),
+                        // اليمين
+                        Row(
+                          children: [
+                            const Text(
+                              "Sort by: ",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            const SizedBox(width: 8),
+                            DropdownButton<String>(
+                              dropdownColor: Colors.white,
+                              value: "All",
+                              style: const TextStyle(color: Colors.black),
+                              items:
+                                  [
+                                        "All",
+                                        "Web Apps",
+                                        "Mobile Apps",
+                                        "Desktop App",
+                                      ]
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(
+                                            e,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                              onChanged: (value) {},
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: width,
+                    height: 40,
+                    child: Row(
+                      children: [
+                        Text("Active Filter"),
+                        SizedBox(width: 10),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green[900],
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Text(
+                            "Price | 200 DA - 2000 DA   x",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        Text(
-                          "Home / Shop",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w300,
+                        SizedBox(width: 10),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
                           ),
+                          decoration: BoxDecoration(
+                            color: Colors.green[900],
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Text(
+                            "Best seller   x",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green[900],
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Text(
+                            "In Stock   x",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Clear All",
+                              style: TextStyle(color: Colors.orangeAccent),
+                            ),
+
+                            Container(
+                              height: 2,
+                              width: 45,
+                              color: Colors.orangeAccent,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: height,
+                    width: width - 250,
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      padding: const EdgeInsets.all(12),
+                      children: [
+                        CategoryCard(
+                          title: "For Her",
+                          imageUrl: "https://i.ibb.co/mCjY5Lp/for-her.jpg",
+                        ),
+                        CategoryCard(
+                          title: "For Him",
+                          imageUrl: "https://i.ibb.co/S5cQTSm/for-him.jpg",
+                        ),
+                        CategoryCard(
+                          title: "Kids",
+                          imageUrl: "https://i.ibb.co/FVn1J6L/kids.jpg",
                         ),
                       ],
                     ),
@@ -163,31 +266,70 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            // End  CarouselSlider imahge Widget
-            SizedBox(
-              height: height,
-              width: width - 250,
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: const EdgeInsets.all(12),
-                children: [
-                  CategoryCard(
-                    title: "For Her",
-                    imageUrl: "https://i.ibb.co/mCjY5Lp/for-her.jpg",
-                  ),
-                  CategoryCard(
-                    title: "For Him",
-                    imageUrl: "https://i.ibb.co/S5cQTSm/for-him.jpg",
-                  ),
-                  CategoryCard(
-                    title: "Kids",
-                    imageUrl: "https://i.ibb.co/FVn1J6L/kids.jpg",
-                  ),
-                ],
-              ),
-            ),
+            // End  Products Widget
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CarouselWidget extends StatelessWidget {
+  const CarouselWidget({super.key, required this.width, required this.imgList});
+
+  final double width;
+  final List<String> imgList;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      width: width,
+      child: Stack(
+        children: [
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 200,
+              autoPlay: true, // ✅ يتحرك تلقائي
+              autoPlayInterval: Duration(seconds: 3), // مدة كل صورة
+              autoPlayAnimationDuration: Duration(milliseconds: 800),
+              enlargeCenterPage: true, // يكبر الصورة الوسطى
+              viewportFraction: 0.9, // عرض كل صورة
+            ),
+            items:
+                imgList
+                    .map(
+                      (item) => Container(
+                        margin: EdgeInsets.all(5.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            item,
+                            fit: BoxFit.cover,
+                            width: width,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Shop",
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  "Home / Shop",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
