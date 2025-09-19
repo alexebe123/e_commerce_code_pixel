@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_commerce_code_pixel/res/app_conste.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,6 +14,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _hoverIndex = -1; // باش نعرف وين راهي الفأرة
   final List<String> items = ["Home", "About", "Shop", "Contact"];
+  final List<String> imgList = [
+    "lib/res/images/1.jpg",
+    "lib/res/images/2.jpg",
+    "lib/res/images/3.png",
+    "lib/res/images/4.jpg",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +106,64 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             // End  AppBAr Widget
+            // Satrt  CarouselSlider imahge Widget
+            SizedBox(
+              height: 200,
+              width: width,
+              child: Stack(
+                children: [
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: 200,
+                      autoPlay: true, // ✅ يتحرك تلقائي
+                      autoPlayInterval: Duration(seconds: 3), // مدة كل صورة
+                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      enlargeCenterPage: true, // يكبر الصورة الوسطى
+                      viewportFraction: 0.9, // عرض كل صورة
+                    ),
+                    items:
+                        imgList
+                            .map(
+                              (item) => Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    item,
+                                    fit: BoxFit.cover,
+                                    width: width,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Shop",
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          "Home / Shop",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // End  CarouselSlider imahge Widget
             SizedBox(
               height: height,
               width: width - 250,
