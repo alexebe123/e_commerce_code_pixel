@@ -1,9 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:e_commerce_code_pixel/res/app_conste.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,6 +25,53 @@ class _HomePageState extends State<HomePage> {
     'Mobile Apps': 'Mobile', // أو 'mobile' حسب ما تحفظ في project.type
     'Desktop App': 'Desktop',
   };
+
+  int currentPage = 1; // الصفحة الحالية
+  final int totalPages = 10; // عدد الصفحات الكلي
+  List<Widget> _buildPageNumbers() {
+    List<Widget> pages = [];
+
+    for (int i = 1; i <= totalPages; i++) {
+      // لإظهار أول 3 صفحات + آخر صفحة + الصفحة الحالية مع النقاط
+      if (i == 1 ||
+          i == totalPages ||
+          (i >= currentPage - 1 && i <= currentPage + 1)) {
+        pages.add(
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                currentPage = i;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color:
+                    currentPage == i
+                        ? Colors.green.shade900
+                        : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                "$i",
+                style: TextStyle(
+                  color: currentPage == i ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        );
+      } else if (i == 2 && currentPage > 3) {
+        pages.add(const Text("..."));
+      } else if (i == totalPages - 1 && currentPage < totalPages - 2) {
+        pages.add(const Text("..."));
+      }
+    }
+
+    return pages;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +289,6 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: GridView.builder(
                       padding: const EdgeInsets.all(16),
-
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 4, // عدد الأعمدة
@@ -260,6 +304,43 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             // End  Products Widget
+            SizedBox(height: 10),
+            // Satrt Pagination System
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // زر السابق
+                IconButton(
+                  onPressed:
+                      currentPage > 1
+                          ? () {
+                            setState(() {
+                              currentPage--;
+                            });
+                          }
+                          : null,
+                  icon: const Icon(Icons.chevron_left),
+                ),
+
+                // الصفحات
+                ..._buildPageNumbers(),
+
+                // زر التالي
+                IconButton(
+                  onPressed:
+                      currentPage < totalPages
+                          ? () {
+                            setState(() {
+                              currentPage++;
+                            });
+                          }
+                          : null,
+                  icon: const Icon(Icons.chevron_right),
+                ),
+              ],
+            ),
+
+            // End Pagination System
           ],
         ),
       ),
