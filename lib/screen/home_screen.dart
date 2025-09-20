@@ -3,6 +3,7 @@ import 'package:e_commerce_code_pixel/res/app_conste.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -230,7 +231,6 @@ class _HomePageState extends State<HomePage> {
                               "Clear All",
                               style: TextStyle(color: Colors.orangeAccent),
                             ),
-
                             Container(
                               height: 2,
                               width: 45,
@@ -241,26 +241,19 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: height,
-                    width: width - 250,
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      padding: const EdgeInsets.all(12),
-                      children: [
-                        CategoryCard(
-                          title: "For Her",
-                          imageUrl: "https://i.ibb.co/mCjY5Lp/for-her.jpg",
-                        ),
-                        CategoryCard(
-                          title: "For Him",
-                          imageUrl: "https://i.ibb.co/S5cQTSm/for-him.jpg",
-                        ),
-                        CategoryCard(
-                          title: "Kids",
-                          imageUrl: "https://i.ibb.co/FVn1J6L/kids.jpg",
-                        ),
-                      ],
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(16),
+
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4, // عدد الأعمدة
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 0.7, // تناسب الطول/العرض
+                          ),
+                      itemBuilder: (context, index) => ProductCard(),
+                      itemCount: 8,
                     ),
                   ),
                 ],
@@ -414,36 +407,145 @@ class ContactWidget extends StatelessWidget {
   }
 }
 
-class CategoryCard extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-
-  const CategoryCard({super.key, required this.title, required this.imageUrl});
+class ProductCard extends StatelessWidget {
+  const ProductCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.go('/products/$title'),
+      onTap: () => context.go('/products/dsdss'),
       child: Card(
-        child: Stack(
-          fit: StackFit.expand,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 4,
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(AppConste.imageUrl, fit: BoxFit.cover),
-            Container(
-              color: Colors.black26,
-              alignment: Alignment.center,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            // الجزء العلوي (صورة + خصم + أيقونات)
+            Stack(
+              children: [
+                // صورة المنتج
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    "lib/res/images/1.jpg",
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
+
+                // زر الخصم
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade700,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      "50% off",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // الأيقونات
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: Column(
+                    children: [
+                      _buildIcon(FontAwesomeIcons.heart),
+                      const SizedBox(height: 10),
+                      _buildIcon(FontAwesomeIcons.expand),
+                      const SizedBox(height: 10),
+                      _buildIcon(FontAwesomeIcons.bagShopping),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // معلومات المنتج
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Sker Cate",
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      // تقييم النجوم
+                      Row(
+                        children: const [
+                          Icon(Icons.star, color: Colors.amber, size: 18),
+                          SizedBox(width: 4),
+                          Text(
+                            "4.9",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    "SäkSculpt Serum",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // السعر
+                  Row(
+                    children: const [
+                      Text(
+                        "\$35.00 ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        "\$70.00",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // ويدجت صغيرة لبناء الأيقونات الدائرية
+  static Widget _buildIcon(IconData icon) {
+    return CircleAvatar(
+      radius: 20,
+      backgroundColor: Colors.white,
+      child: Icon(icon, color: Colors.black87, size: 18),
     );
   }
 }
