@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -285,6 +288,13 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
+  Future<void> launchUrls(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'لا يمكن فتح الرابط: $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -567,7 +577,13 @@ class _HomePageState extends State<HomePage> {
                                 childAspectRatio: 0.75,
                               ),
                           itemCount: 6,
-                          itemBuilder: (context, index) => const ProductCard(),
+                          itemBuilder:
+                              (context, index) => InkWell(
+                                onTap: () {
+                                  context.go('/product/');
+                                },
+                                child: const ProductCard(),
+                              ),
                         ),
 
                         const SizedBox(height: 20),
@@ -692,6 +708,12 @@ class ContactWidget extends StatelessWidget {
   final double width;
 
   const ContactWidget({super.key, required this.width});
+  Future<void> launchUrls(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'لا يمكن فتح الرابط: $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -707,9 +729,22 @@ class ContactWidget extends StatelessWidget {
             "Contact us +213658948791",
             style: TextStyle(color: Colors.white),
           ),
-          const Text(
-            "If you want to make a website https://example.com/",
-            style: TextStyle(color: Colors.white),
+          Row(
+            children: [
+              const Text(
+                "If you want to make a website   ",
+                style: TextStyle(color: Colors.white),
+              ),
+              InkWell(
+                onTap: () {
+                  launchUrls("https://electro-daimn-house.web.app/");
+                },
+                child: const Text(
+                  "Here",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
           Row(
             children: [

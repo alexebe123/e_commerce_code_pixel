@@ -25,14 +25,16 @@ class MyApp extends StatelessWidget {
         },
       ),
       GoRoute(
-        path: '/product/:id',
+        path: "/product",
+        /* path: '/product/:id',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           final product = AppConste().dummyProducts.firstWhere(
             (prod) => prod.id == id,
           );
-          return ProductDetailPage(product: product);
-        },
+          return ProductDetailScreen();
+        },*/
+        builder: (context, state) => ProductDetailScreen(),
       ),
     ],
   );
