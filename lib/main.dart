@@ -1,4 +1,3 @@
-import 'package:e_commerce_code_pixel/res/app_conste.dart';
 import 'package:e_commerce_code_pixel/screen/home_screen.dart';
 import 'package:e_commerce_code_pixel/screen/product_detail_screen.dart';
 import 'package:e_commerce_code_pixel/screen/products_screen.dart';
