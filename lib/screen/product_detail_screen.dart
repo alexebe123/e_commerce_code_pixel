@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce_code_pixel/res/algeria_cites.dart';
 
@@ -16,6 +17,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? selectedCommune;
   String name = "";
   String phone = "";
+  final CarouselSliderController _controller = CarouselSliderController();
+  int _current = 0;
+
+  final List<String> images = [
+    "lib/res/images/1.jpg",
+    "lib/res/images/2.jpg",
+    "lib/res/images/3.png",
+    "lib/res/images/4.jpg",
+  ];
   final List<Map<String, dynamic>> _colors = [
     {'name': 'Black', 'value': Colors.black},
     {'name': 'White', 'value': Colors.white},
@@ -92,10 +102,105 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           Column(
                             children: [
-                              Image.asset(
-                                "lib/res/images/1.jpg",
-                                height: 280,
-                                fit: BoxFit.cover,
+                              SizedBox(
+                                width: 300,
+                                child: Column(
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        CarouselSlider(
+                                          items:
+                                              images
+                                                  .map(
+                                                    (img) => Image.asset(
+                                                      img,
+                                                      fit: BoxFit.cover,
+                                                      width: double.infinity,
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                          carouselController: _controller,
+                                          options: CarouselOptions(
+                                            height: 250,
+                                            autoPlay: true,
+                                            enlargeCenterPage: true,
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                _current = index;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        // سهم يسار
+                                        Positioned(
+                                          left: 10,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              _controller.previousPage(
+                                                duration: const Duration(
+                                                  milliseconds: 300,
+                                                ),
+                                                curve: Curves.easeInOut,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        // سهم يمين
+                                        Positioned(
+                                          right: 10,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              _controller.nextPage(
+                                                duration: const Duration(
+                                                  milliseconds: 300,
+                                                ),
+                                                curve: Curves.easeInOut,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    // المؤشر (الدوائر الصغيرة تحت الصور)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children:
+                                          images.asMap().entries.map((entry) {
+                                            return GestureDetector(
+                                              onTap:
+                                                  () => _controller
+                                                      .animateToPage(entry.key),
+                                              child: Container(
+                                                width: 10,
+                                                height: 10,
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 4,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color:
+                                                      _current == entry.key
+                                                          ? Colors.blueAccent
+                                                          : Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                    ),
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 20),
                               Row(
@@ -118,41 +223,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   ),
                                 ],
                               ),
+
                               // Additional Images Gallery
-                              const SizedBox(height: 16),
-                              SizedBox(
-                                height: 120,
-                                width: 300,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
-                                  separatorBuilder:
-                                      (context, index) =>
-                                          const SizedBox(width: 12),
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.1),
-                                            blurRadius: 6,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            'https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
                             ],
                           ),
                           SizedBox(width: 20),
