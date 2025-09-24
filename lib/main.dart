@@ -1,12 +1,14 @@
+import 'package:e_commerce_code_pixel/screen/dashbord_screen.dart';
 import 'package:e_commerce_code_pixel/screen/home_screen.dart';
 import 'package:e_commerce_code_pixel/screen/product_detail_screen.dart';
-import 'package:e_commerce_code_pixel/screen/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 // استورد الموديل و البيانات هنا
 
 void main() {
+  usePathUrlStrategy();
   runApp(MyApp());
 }
 
@@ -16,12 +18,16 @@ class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
     routes: [
       GoRoute(path: '/', builder: (context, state) => const HomePage()),
-      GoRoute(
+      /* GoRoute(
         path: '/products/:category',
         builder: (context, state) {
           final category = state.pathParameters['category']!;
           return ProductsPage(category: category);
         },
+      ),*/
+      GoRoute(
+        path: '/dashbord',
+        builder: (context, state) => const DashboardScreen(),
       ),
       GoRoute(
         path: "/product",
