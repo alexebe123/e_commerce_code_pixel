@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildPromotionsSection() {
+  Widget _buildPromotionsSection(bool isTablet, bool isDesktop) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -199,13 +199,13 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          ..._buildCheckboxList(promotions),
+          ..._buildCheckboxList(promotions, isTablet, isDesktop),
         ],
       ),
     );
   }
 
-  Widget _buildAvailabilitySection() {
+  Widget _buildAvailabilitySection(bool isTablet, bool isDesktop) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          ..._buildCheckboxList(availability),
+          ..._buildCheckboxList(availability, isTablet, isDesktop),
         ],
       ),
     );
@@ -265,23 +265,33 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget> _buildCheckboxList(Map<String, bool> items) {
+  List<Widget> _buildCheckboxList(
+    Map<String, bool> items,
+    bool isTablet,
+    bool isDesktop,
+  ) {
     return items.entries.map((entry) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Checkbox(
-              value: entry.value,
-              onChanged: (bool? value) {
-                setState(() {
-                  items[entry.key] = value!;
-                });
-              },
-              activeColor: Colors.pink,
+            Transform.scale(
+              scale: isTablet ? 1 : (isDesktop ? 1.5 : 0.5),
+              child: Checkbox(
+                value: entry.value,
+                onChanged: (bool? value) {
+                  setState(() {
+                    items[entry.key] = value!;
+                  });
+                },
+                activeColor: Colors.pink,
+              ),
             ),
             const SizedBox(width: 8),
-            Text(entry.key, style: const TextStyle(fontSize: 16)),
+            Text(
+              entry.key,
+              style: TextStyle(fontSize: isTablet ? 12 : (isDesktop ? 16 : 8)),
+            ),
           ],
         ),
       );
@@ -403,97 +413,112 @@ class _HomePageState extends State<HomePage> {
 
             // Filter and Products Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: isTablet ? 12 : (isDesktop ? 16 : 8),
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Filter Sidebar
-                  SizedBox(
-                    width: 280,
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        Text(
-                          "Filter By",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        _buildSection(
-                          title: 'By Categories',
-                          children: _buildCheckboxList(_categories),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildSection(
-                          title: 'By Skin Type',
-                          children: _buildCheckboxList(_skinTypes),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildSection(
-                          title: 'Price',
+                  (isTablet | isDesktop)
+                      ? SizedBox(
+                        width: isTablet ? 180 : (isDesktop ? 280 : 100),
+                        child: ListView(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           children: [
-                            RangeSlider(
-                              values: _priceRange,
-                              min: minPrice,
-                              max: maxPrice,
-                              divisions: 9,
-                              labels: RangeLabels(
-                                '\$${_priceRange.start.toStringAsFixed(2)}',
-                                '\$${_priceRange.end.toStringAsFixed(2)}',
+                            Text(
+                              "Filter By",
+                              style: TextStyle(
+                                fontSize: isTablet ? 15 : (isDesktop ? 18 : 10),
+                                fontWeight: FontWeight.bold,
                               ),
-                              onChanged: (RangeValues values) {
-                                setState(() {
-                                  _priceRange = values;
-                                });
-                              },
                             ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            _buildSection(
+                              title: 'By Categories',
+                              children: _buildCheckboxList(
+                                _categories,
+                                isTablet,
+                                isDesktop,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildSection(
+                              title: 'By Skin Type',
+                              children: _buildCheckboxList(
+                                _skinTypes,
+                                isTablet,
+                                isDesktop,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildSection(
+                              title: 'Price',
                               children: [
-                                Text(
-                                  '\$${minPrice.toStringAsFixed(2)}',
-                                  style: const TextStyle(fontSize: 14),
+                                RangeSlider(
+                                  values: _priceRange,
+                                  min: minPrice,
+                                  max: maxPrice,
+                                  divisions: 9,
+                                  labels: RangeLabels(
+                                    '\$${_priceRange.start.toStringAsFixed(2)}',
+                                    '\$${_priceRange.end.toStringAsFixed(2)}',
+                                  ),
+                                  onChanged: (RangeValues values) {
+                                    setState(() {
+                                      _priceRange = values;
+                                    });
+                                  },
                                 ),
-                                Text(
-                                  '\$${maxPrice.toStringAsFixed(2)}',
-                                  style: const TextStyle(fontSize: 14),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '\$${minPrice.toStringAsFixed(2)}',
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      '\$${maxPrice.toStringAsFixed(2)}',
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        _buildReviewSection(),
-                        const SizedBox(height: 20),
-                        _buildPromotionsSection(),
-                        const SizedBox(height: 20),
-                        _buildAvailabilitySection(),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.pink,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                            const SizedBox(height: 20),
+                            _buildReviewSection(),
+                            const SizedBox(height: 20),
+                            _buildPromotionsSection(isTablet, isDesktop),
+                            const SizedBox(height: 20),
+                            _buildAvailabilitySection(isTablet, isDesktop),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.pink,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Apply Filters',
+                                  style: TextStyle(fontSize: 16),
+                                ),
                               ),
                             ),
-                            child: const Text(
-                              'Apply Filters',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
+                      )
+                      : SizedBox(),
 
                   const SizedBox(width: 20),
 
