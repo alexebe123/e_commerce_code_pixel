@@ -322,76 +322,73 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ResponsiveRowColumnItem(
-                    child: Image.asset("lib/res/images/logo.png", height: 50),
+                  Image.asset(
+                    "lib/res/images/logo.png",
+                    height: isTablet ? 30 : (isDesktop ? 50 : 20),
                   ),
-                  ResponsiveRowColumn(
-                    layout:
-                        ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                            ? ResponsiveRowColumnType.COLUMN
-                            : ResponsiveRowColumnType.ROW,
+                  Wrap(
+                    spacing: 1, // المسافة الأفقية بين العناصر
+                    runSpacing: 1, // المسافة العمودية بين الصفوف
                     children: List.generate(items.length, (index) {
-                      return ResponsiveRowColumnItem(
-                        child: MouseRegion(
-                          onEnter: (_) {
-                            setState(() {
-                              _hoverIndex = index;
-                            });
-                          },
-                          onExit: (_) {
-                            setState(() {
-                              _hoverIndex = -1;
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  items[index],
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                      return MouseRegion(
+                        onEnter: (_) {
+                          setState(() {
+                            _hoverIndex = index;
+                          });
+                        },
+                        onExit: (_) {
+                          setState(() {
+                            _hoverIndex = -1;
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                items[index],
+                                style: TextStyle(
+                                  fontSize:
+                                      isTablet ? 15 : (isDesktop ? 18 : 10),
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  height: 2,
-                                  width: _hoverIndex == index ? 40 : 0,
-                                  color: Colors.green.shade900,
-                                ),
-                              ],
-                            ),
+                              ),
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                height: 2,
+                                width: _hoverIndex == index ? 40 : 0,
+                                color: Colors.green.shade900,
+                              ),
+                            ],
                           ),
                         ),
                       );
                     }),
                   ),
-                  ResponsiveRowColumn(
-                    layout:
-                        ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                            ? ResponsiveRowColumnType.COLUMN
-                            : ResponsiveRowColumnType.ROW,
+                  Row(
                     children: [
-                      ResponsiveRowColumnItem(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(FontAwesomeIcons.user),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          FontAwesomeIcons.user,
+                          size: isTablet ? 16 : (isDesktop ? 20 : 12),
                         ),
                       ),
-                      ResponsiveRowColumnItem(child: SizedBox(width: 10)),
-                      ResponsiveRowColumnItem(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(FontAwesomeIcons.heart),
+                      SizedBox(width: isTablet ? 7 : (isDesktop ? 10 : 4)),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          FontAwesomeIcons.heart,
+                          size: isTablet ? 16 : (isDesktop ? 20 : 12),
                         ),
                       ),
-                      const ResponsiveRowColumnItem(child: SizedBox(width: 10)),
-                      ResponsiveRowColumnItem(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(FontAwesomeIcons.bagShopping),
+                      SizedBox(width: isTablet ? 7 : (isDesktop ? 10 : 4)),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          FontAwesomeIcons.bagShopping,
+                          size: isTablet ? 16 : (isDesktop ? 20 : 12),
                         ),
                       ),
                     ],
