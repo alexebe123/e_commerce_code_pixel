@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildReviewSection() {
+  Widget _buildReviewSection(bool isDesktop, bool isTablet) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -164,6 +164,8 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 16),
           for (var entry in starRatings.entries)
             _buildStarRatingItem(
+              isDesktop: isDesktop,
+              isTablet: isTablet,
               stars: entry.key,
               isSelected: entry.value,
               onChanged: (value) {
@@ -237,29 +239,39 @@ class _HomePageState extends State<HomePage> {
     required int stars,
     required bool isSelected,
     required ValueChanged<bool?> onChanged,
+    required bool isTablet,
+    required bool isDesktop,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(
+        vertical: isTablet ? 5 : (isDesktop ? 8 : 2),
+      ),
       child: Row(
         children: [
-          Checkbox(
-            value: isSelected,
-            onChanged: onChanged,
-            activeColor: Colors.pink,
+          Transform.scale(
+            scale: isTablet ? 0.8 : (isDesktop ? 1.5 : 0.5),
+            child: Checkbox(
+              value: isSelected,
+              onChanged: onChanged,
+              activeColor: Colors.pink,
+            ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: isTablet ? 3 : (isDesktop ? 8 : 1.5)),
           // بناء النجوم
           Row(
             children: List.generate(5, (index) {
               return Icon(
                 index < stars ? Icons.star : Icons.star_border,
                 color: index < stars ? Colors.amber : Colors.grey,
-                size: 20,
+                size: isTablet ? 13 : (isDesktop ? 20 : 9),
               );
             }),
           ),
-          const SizedBox(width: 8),
-          Text('$stars Star${stars > 1 ? 's' : ''}'),
+          SizedBox(width: isTablet ? 5 : (isDesktop ? 8 : 3)),
+          Text(
+            '$stars Star${stars > 1 ? 's' : ''}',
+            style: TextStyle(fontSize: isTablet ? 13 : (isDesktop ? 18 : 9)),
+          ),
         ],
       ),
     );
@@ -316,11 +328,13 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             // Contact Widget
-            ContactWidget(
-              width: width,
-              isDesktop: isDesktop,
-              isTablet: isTablet,
-            ),
+            (isTablet | isDesktop)
+                ? ContactWidget(
+                  width: width,
+                  isDesktop: isDesktop,
+                  isTablet: isTablet,
+                )
+                : SizedBox(),
             const SizedBox(height: 10),
 
             // AppBar Widget
@@ -376,33 +390,35 @@ class _HomePageState extends State<HomePage> {
                       );
                     }),
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          FontAwesomeIcons.user,
-                          size: isTablet ? 16 : (isDesktop ? 20 : 12),
-                        ),
-                      ),
-                      SizedBox(width: isTablet ? 7 : (isDesktop ? 10 : 4)),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          FontAwesomeIcons.heart,
-                          size: isTablet ? 16 : (isDesktop ? 20 : 12),
-                        ),
-                      ),
-                      SizedBox(width: isTablet ? 7 : (isDesktop ? 10 : 4)),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          FontAwesomeIcons.bagShopping,
-                          size: isTablet ? 16 : (isDesktop ? 20 : 12),
-                        ),
-                      ),
-                    ],
-                  ),
+                  (isTablet | isDesktop)
+                      ? Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              FontAwesomeIcons.user,
+                              size: isTablet ? 16 : (isDesktop ? 20 : 12),
+                            ),
+                          ),
+                          SizedBox(width: isTablet ? 7 : (isDesktop ? 10 : 4)),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              FontAwesomeIcons.heart,
+                              size: isTablet ? 16 : (isDesktop ? 20 : 12),
+                            ),
+                          ),
+                          SizedBox(width: isTablet ? 7 : (isDesktop ? 10 : 4)),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              FontAwesomeIcons.bagShopping,
+                              size: isTablet ? 16 : (isDesktop ? 20 : 12),
+                            ),
+                          ),
+                        ],
+                      )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -488,7 +504,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             const SizedBox(height: 20),
-                            _buildReviewSection(),
+                            _buildReviewSection(isDesktop, isTablet),
                             const SizedBox(height: 20),
                             _buildPromotionsSection(isTablet, isDesktop),
                             const SizedBox(height: 20),
