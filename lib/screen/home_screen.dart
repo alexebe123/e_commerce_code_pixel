@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -297,13 +297,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+    final isTablet = w >= 700 && w < 1000;
+    final isDesktop = w >= 1000;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Contact Widget
-            ContactWidget(width: width),
+            ContactWidget(
+              width: width,
+              isDesktop: isDesktop,
+              isTablet: isTablet,
+            ),
             const SizedBox(height: 10),
 
             // AppBar Widget
@@ -315,60 +322,77 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset("lib/res/images/logo.png", height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  ResponsiveRowColumnItem(
+                    child: Image.asset("lib/res/images/logo.png", height: 50),
+                  ),
+                  ResponsiveRowColumn(
+                    layout:
+                        ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                            ? ResponsiveRowColumnType.COLUMN
+                            : ResponsiveRowColumnType.ROW,
                     children: List.generate(items.length, (index) {
-                      return MouseRegion(
-                        onEnter: (_) {
-                          setState(() {
-                            _hoverIndex = index;
-                          });
-                        },
-                        onExit: (_) {
-                          setState(() {
-                            _hoverIndex = -1;
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                items[index],
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
+                      return ResponsiveRowColumnItem(
+                        child: MouseRegion(
+                          onEnter: (_) {
+                            setState(() {
+                              _hoverIndex = index;
+                            });
+                          },
+                          onExit: (_) {
+                            setState(() {
+                              _hoverIndex = -1;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  items[index],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                height: 2,
-                                width: _hoverIndex == index ? 40 : 0,
-                                color: Colors.green.shade900,
-                              ),
-                            ],
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  height: 2,
+                                  width: _hoverIndex == index ? 40 : 0,
+                                  color: Colors.green.shade900,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
                     }),
                   ),
-                  Row(
+                  ResponsiveRowColumn(
+                    layout:
+                        ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                            ? ResponsiveRowColumnType.COLUMN
+                            : ResponsiveRowColumnType.ROW,
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(FontAwesomeIcons.user),
+                      ResponsiveRowColumnItem(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(FontAwesomeIcons.user),
+                        ),
                       ),
-                      const SizedBox(width: 10),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(FontAwesomeIcons.heart),
+                      ResponsiveRowColumnItem(child: SizedBox(width: 10)),
+                      ResponsiveRowColumnItem(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(FontAwesomeIcons.heart),
+                        ),
                       ),
-                      const SizedBox(width: 10),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(FontAwesomeIcons.bagShopping),
+                      const ResponsiveRowColumnItem(child: SizedBox(width: 10)),
+                      ResponsiveRowColumnItem(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(FontAwesomeIcons.bagShopping),
+                        ),
                       ),
                     ],
                   ),
@@ -566,24 +590,31 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 20),
 
                         // Products Grid
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                                childAspectRatio: 0.75,
-                              ),
-                          itemCount: 6,
-                          itemBuilder:
-                              (context, index) => InkWell(
-                                onTap: () {
-                                  context.go('/product/');
-                                },
-                                child: const ProductCard(),
-                              ),
+                        SizedBox(
+                          height: 600,
+                          width: 1000,
+                          child: ResponsiveGridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate: const ResponsiveGridDelegate(
+                              maxCrossAxisExtent: 250,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              childAspectRatio: 0.75,
+                            ),
+                            itemCount: 6,
+                            itemBuilder: (context, index) {
+                              return ResponsiveRowColumnItem(
+                                child: InkWell(
+                                  onTap: () {
+                                    context.go('/product/');
+                                  },
+                                  child: const ResponsiveRowColumnItem(
+                                    child: ProductCard(),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
 
                         const SizedBox(height: 20),
@@ -706,8 +737,15 @@ class CarouselWidget extends StatelessWidget {
 
 class ContactWidget extends StatelessWidget {
   final double width;
+  final bool isTablet;
+  final bool isDesktop;
 
-  const ContactWidget({super.key, required this.width});
+  const ContactWidget({
+    super.key,
+    required this.width,
+    required this.isDesktop,
+    required this.isTablet,
+  });
   Future<void> launchUrls(String url) async {
     final Uri uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
@@ -725,23 +763,32 @@ class ContactWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Contact us +213658948791",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: isTablet ? 15 : (isDesktop ? 17 : 10),
+            ),
           ),
           Row(
             children: [
-              const Text(
-                "If you want to make a website   ",
-                style: TextStyle(color: Colors.white),
+              Text(
+                "website   ",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: isTablet ? 15 : (isDesktop ? 17 : 10),
+                ),
               ),
               InkWell(
                 onTap: () {
                   launchUrls("https://electro-daimn-house.web.app/");
                 },
-                child: const Text(
+                child: Text(
                   "Here",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isTablet ? 15 : (isDesktop ? 17 : 10),
+                  ),
                 ),
               ),
             ],
@@ -751,27 +798,42 @@ class ContactWidget extends StatelessWidget {
               IconButton(
                 color: Colors.white,
                 onPressed: () {},
-                icon: const Icon(FontAwesomeIcons.tiktok, size: 16),
+                icon: Icon(
+                  FontAwesomeIcons.tiktok,
+                  size: isTablet ? 15 : (isDesktop ? 17 : 10),
+                ),
               ),
               IconButton(
                 color: Colors.white,
                 onPressed: () {},
-                icon: const Icon(FontAwesomeIcons.facebook, size: 16),
+                icon: Icon(
+                  FontAwesomeIcons.facebook,
+                  size: isTablet ? 15 : (isDesktop ? 17 : 10),
+                ),
               ),
               IconButton(
                 color: Colors.white,
                 onPressed: () {},
-                icon: const Icon(FontAwesomeIcons.twitter, size: 16),
+                icon: Icon(
+                  FontAwesomeIcons.twitter,
+                  size: isTablet ? 15 : (isDesktop ? 17 : 10),
+                ),
               ),
               IconButton(
                 color: Colors.white,
                 onPressed: () {},
-                icon: const Icon(FontAwesomeIcons.instagram, size: 16),
+                icon: Icon(
+                  FontAwesomeIcons.instagram,
+                  size: isTablet ? 15 : (isDesktop ? 17 : 10),
+                ),
               ),
               IconButton(
                 color: Colors.white,
                 onPressed: () {},
-                icon: const Icon(FontAwesomeIcons.linkedin, size: 16),
+                icon: Icon(
+                  FontAwesomeIcons.linkedin,
+                  size: isTablet ? 15 : (isDesktop ? 17 : 10),
+                ),
               ),
             ],
           ),
@@ -786,20 +848,18 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Image
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Product Image
+        Stack(
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+              child: ResponsiveRowColumnItem(
                 child: Image.asset(
                   "lib/res/images/1.jpg",
                   height: 180,
@@ -807,91 +867,90 @@ class ProductCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                top: 12,
-                left: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade700,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    "50% off",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+            ),
+            Positioned(
+              top: 12,
+              left: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade700,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  "50% off",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
                 ),
               ),
+            ),
+          ],
+        ),
+        // Product Details
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Skin Care",
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber, size: 16),
+                      SizedBox(width: 4),
+                      Text(
+                        "4.9",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                "Sculpt Serum",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Text(
+                    "\$35.00 ",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green[700],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "\$70.00",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-
-          // Product Details
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Skin Care",
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.star, color: Colors.amber, size: 16),
-                        SizedBox(width: 4),
-                        Text(
-                          "4.9",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  "Sculpt Serum",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      "\$35.00 ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green[700],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      "\$70.00",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

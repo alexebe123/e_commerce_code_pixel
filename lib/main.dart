@@ -1,9 +1,11 @@
-import 'package:e_commerce_code_pixel/screen/dashbord_screen.dart';
+import 'package:e_commerce_code_pixel/screen/dashbord/dashbord_screen.dart';
+import 'package:e_commerce_code_pixel/screen/dashbord/main_dashbord_screen.dart';
 import 'package:e_commerce_code_pixel/screen/home_screen.dart';
 import 'package:e_commerce_code_pixel/screen/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 // استورد الموديل و البيانات هنا
 
@@ -17,6 +19,18 @@ class MyApp extends StatelessWidget {
 
   final GoRouter _router = GoRouter(
     routes: [
+      // ShellRoute: يحتوي على الـ Layout الثابت
+      ShellRoute(
+        builder: (context, state, child) {
+          return MainDashbordScreen(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/dashboard',
+            builder: (context, state) => const DashboardScreen(),
+          ),
+        ],
+      ),
       GoRoute(path: '/', builder: (context, state) => const HomePage()),
       /* GoRoute(
         path: '/products/:category',
@@ -25,10 +39,6 @@ class MyApp extends StatelessWidget {
           return ProductsPage(category: category);
         },
       ),*/
-      GoRoute(
-        path: '/dashbord',
-        builder: (context, state) => const DashboardScreen(),
-      ),
       GoRoute(
         path: "/product",
         /* path: '/product/:id',
@@ -49,6 +59,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
+      builder:
+          (context, child) => ResponsiveBreakpoints.builder(
+            child: child!,
+            breakpoints: [
+              const Breakpoint(start: 0, end: 450, name: MOBILE),
+              const Breakpoint(start: 451, end: 800, name: TABLET),
+              const Breakpoint(start: 801, end: 1200, name: DESKTOP),
+              const Breakpoint(start: 1201, end: double.infinity, name: '4K'),
+            ],
+          ),
     );
   }
 }

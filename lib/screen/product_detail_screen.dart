@@ -18,27 +18,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   String? selectedCommune;
   String name = "";
   String phone = "";
-  late AnimationController _controller;
-  late Animation<Offset> _offsetAnimation;
 
   @override
   void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.2), // يطلع
-      end: const Offset(0, 0.2), // يهبط
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  }
+    super.initState();}
 
   @override
   void dispose() {
-    _controller.dispose();
+    
     super.dispose();
   }
 
@@ -263,286 +250,264 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           SizedBox(
                             width: 500,
                             height: 400,
-                            child: Stack(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Center(
-                                  child: SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0, -0.2),
-                                      end: const Offset(0, 0.2),
-                                    ).animate(
-                                      CurvedAnimation(
-                                        parent: _controller,
-                                        curve: Curves.easeInOut,
-                                      ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.touch_app,
-                                      size: 48,
-                                      color: Colors.amber,
-                                    ),
+                                const Text(
+                                  'Select Color',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Select Color',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    SizedBox(
-                                      height: 50,
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: _colors.length,
-                                        separatorBuilder:
-                                            (context, index) =>
-                                                const SizedBox(width: 12),
-                                        itemBuilder: (context, index) {
-                                          final color = _colors[index];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _selectedColor = color['name'];
-                                              });
-                                            },
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 8,
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  height: 50,
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _colors.length,
+                                    separatorBuilder:
+                                        (context, index) =>
+                                            const SizedBox(width: 12),
+                                    itemBuilder: (context, index) {
+                                      final color = _colors[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedColor = color['name'];
+                                          });
+                                        },
+                                        child: Container(
+                                          padding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                                vertical: 8,
+                                              ),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                _selectedColor ==
+                                                        color['name']
+                                                    ? const Color(
+                                                      0xFF2A4BA0,
+                                                    ).withOpacity(0.1)
+                                                    : Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                              color:
+                                                  _selectedColor ==
+                                                          color['name']
+                                                      ? const Color(
+                                                        0xFF2A4BA0,
+                                                      )
+                                                      : Colors.grey[300]!,
+                                              width:
+                                                  _selectedColor ==
+                                                          color['name']
+                                                      ? 1.5
+                                                      : 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: color['value'],
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color:
+                                                        Colors.grey[300]!,
+                                                    width: 1,
                                                   ),
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    _selectedColor ==
-                                                            color['name']
-                                                        ? const Color(
-                                                          0xFF2A4BA0,
-                                                        ).withOpacity(0.1)
-                                                        : Colors.transparent,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                border: Border.all(
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                color['name'],
+                                                style: TextStyle(
+                                                  fontWeight:
+                                                      _selectedColor ==
+                                                              color['name']
+                                                          ? FontWeight.w600
+                                                          : FontWeight
+                                                              .normal,
                                                   color:
                                                       _selectedColor ==
                                                               color['name']
                                                           ? const Color(
                                                             0xFF2A4BA0,
                                                           )
-                                                          : Colors.grey[300]!,
-                                                  width:
-                                                      _selectedColor ==
-                                                              color['name']
-                                                          ? 1.5
-                                                          : 1,
+                                                          : Colors.black,
                                                 ),
                                               ),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    width: 20,
-                                                    height: 20,
-                                                    decoration: BoxDecoration(
-                                                      color: color['value'],
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color:
-                                                            Colors.grey[300]!,
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    color['name'],
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          _selectedColor ==
-                                                                  color['name']
-                                                              ? FontWeight.w600
-                                                              : FontWeight
-                                                                  .normal,
-                                                      color:
-                                                          _selectedColor ==
-                                                                  color['name']
-                                                              ? const Color(
-                                                                0xFF2A4BA0,
-                                                              )
-                                                              : Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                            
+                                const SizedBox(height: 24),
+                            
+                                // Size Selection
+                                const Text(
+                                  'Select Size',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  height: 50,
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _sizes.length,
+                                    separatorBuilder:
+                                        (context, index) =>
+                                            const SizedBox(width: 12),
+                                    itemBuilder: (context, index) {
+                                      final size = _sizes[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedSize = size;
+                                          });
                                         },
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 24),
-
-                                    // Size Selection
-                                    const Text(
-                                      'Select Size',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    SizedBox(
-                                      height: 50,
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: _sizes.length,
-                                        separatorBuilder:
-                                            (context, index) =>
-                                                const SizedBox(width: 12),
-                                        itemBuilder: (context, index) {
-                                          final size = _sizes[index];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _selectedSize = size;
-                                              });
-                                            },
-                                            child: Container(
-                                              width: 60,
-                                              decoration: BoxDecoration(
+                                        child: Container(
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                _selectedSize == size
+                                                    ? const Color(
+                                                      0xFF2A4BA0,
+                                                    )
+                                                    : Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color:
+                                                  _selectedSize == size
+                                                      ? const Color(
+                                                        0xFF2A4BA0,
+                                                      )
+                                                      : Colors.grey[300]!,
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              size,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
                                                 color:
                                                     _selectedSize == size
-                                                        ? const Color(
-                                                          0xFF2A4BA0,
-                                                        )
-                                                        : Colors.transparent,
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                border: Border.all(
-                                                  color:
-                                                      _selectedSize == size
-                                                          ? const Color(
-                                                            0xFF2A4BA0,
-                                                          )
-                                                          : Colors.grey[300]!,
-                                                  width: 1.5,
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  size,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color:
-                                                        _selectedSize == size
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                  ),
-                                                ),
+                                                        ? Colors.white
+                                                        : Colors.black,
                                               ),
                                             ),
-                                          );
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                            
+                                const SizedBox(height: 24),
+                            
+                                // Quantity Selector
+                                const Text(
+                                  'Quantity',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Container(
+                                  width: 140,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (_quantity > 1) {
+                                            setState(() {
+                                              _quantity--;
+                                            });
+                                          }
                                         },
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 24),
-
-                                    // Quantity Selector
-                                    const Text(
-                                      'Quantity',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Container(
-                                      width: 140,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (_quantity > 1) {
-                                                setState(() {
-                                                  _quantity--;
-                                                });
-                                              }
-                                            },
-                                            child: Container(
-                                              width: 32,
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.2),
-                                                    blurRadius: 4,
-                                                    offset: const Offset(0, 2),
-                                                  ),
-                                                ],
+                                        child: Container(
+                                          width: 32,
+                                          height: 32,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.2),
+                                                blurRadius: 4,
+                                                offset: const Offset(0, 2),
                                               ),
-                                              child: const Icon(
-                                                Icons.remove,
-                                                size: 18,
-                                              ),
-                                            ),
+                                            ],
                                           ),
-                                          Text(
-                                            _quantity.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                          child: const Icon(
+                                            Icons.remove,
+                                            size: 18,
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _quantity++;
-                                              });
-                                            },
-                                            child: Container(
-                                              width: 32,
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.2),
-                                                    blurRadius: 4,
-                                                    offset: const Offset(0, 2),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: const Icon(
-                                                Icons.add,
-                                                size: 18,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        _quantity.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _quantity++;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 32,
+                                          height: 32,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.2),
+                                                blurRadius: 4,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: const Icon(
+                                            Icons.add,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
