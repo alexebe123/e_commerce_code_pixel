@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -631,25 +630,27 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           height: 600,
                           width: 1000,
-                          child: ResponsiveGridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate: const ResponsiveGridDelegate(
-                              maxCrossAxisExtent: 250,
+                          child: GridView.builder(
+                            padding: const EdgeInsets.all(16),
+                            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 300,
+                              mainAxisExtent: 300, // حسب حجم الشاشة (1 / 3 / 5)
                               crossAxisSpacing: 16,
                               mainAxisSpacing: 16,
-                              childAspectRatio: 0.75,
+                              childAspectRatio:
+                                  isTablet
+                                      ? 0.4
+                                      : (isDesktop
+                                          ? 0.6
+                                          : 1), // 👈 يخلي الكنتينر مربع (العرض = الطول)
                             ),
                             itemCount: 6,
                             itemBuilder: (context, index) {
-                              return ResponsiveRowColumnItem(
-                                child: InkWell(
-                                  onTap: () {
-                                    context.go('/product/');
-                                  },
-                                  child: const ResponsiveRowColumnItem(
-                                    child: ProductCard(),
-                                  ),
-                                ),
+                              return InkWell(
+                                onTap: () {
+                                  context.go('/product/');
+                                },
+                                child: ProductCard(),
                               );
                             },
                           ),
@@ -897,13 +898,12 @@ class ProductCard extends StatelessWidget {
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
-              child: ResponsiveRowColumnItem(
-                child: Image.asset(
-                  "lib/res/images/1.jpg",
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+
+              child: Image.asset(
+                "lib/res/images/1.jpg",
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
             Positioned(
