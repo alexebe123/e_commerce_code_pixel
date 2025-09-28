@@ -43,6 +43,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+     final w = MediaQuery.of(context).size.width;
+    final isTablet = w >= 700 && w < 1000;
+    final isDesktop = w >= 1000;
     final wilayas =
         algeria_cites
             .map((e) => e["wilaya_name_ascii"] as String)
@@ -104,6 +107,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // Strat image
                           Column(
                             children: [
                               SizedBox(
@@ -273,7 +277,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               // Additional Images Gallery
                             ],
                           ),
+                          // End image
                           SizedBox(width: 20),
+                          // Start Color Selection
                           SizedBox(
                             width: 500,
                             height: 400,
@@ -535,9 +541,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               ],
                             ),
                           ),
-                          // Color Selection
+                          // End Color Selection
 
-                          // Delivery Information Card
+                          // Start Delivery Information Card
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
@@ -760,6 +766,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               ],
                             ),
                           ),
+                         // End Delivery Information Card
                         ],
                       ),
                     ),
