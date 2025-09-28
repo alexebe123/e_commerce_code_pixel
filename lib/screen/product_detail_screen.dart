@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce_code_pixel/res/algeria_cites.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key});
@@ -18,16 +19,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   String? selectedCommune;
   String name = "";
   String phone = "";
-
-  @override
-  void initState() {
-    super.initState();}
-
-  @override
-  void dispose() {
-    
-    super.dispose();
-  }
 
   final CarouselSliderController _controllerCarouselSlider =
       CarouselSliderController();
@@ -124,15 +115,51 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                       children: [
                                         CarouselSlider(
                                           items:
-                                              images
-                                                  .map(
-                                                    (img) => Image.asset(
-                                                      img,
-                                                      fit: BoxFit.cover,
-                                                      width: double.infinity,
-                                                    ),
-                                                  )
-                                                  .toList(),
+                                              images.map((img) {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder:
+                                                            (_) => Scaffold(
+                                                              appBar: AppBar(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                leading: IconButton(
+                                                                  icon: Icon(
+                                                                    Icons.close,
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                                  onPressed: () {
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    ); // الخروج من صفحة الصورة
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              backgroundColor:
+                                                                  Colors.black,
+                                                              body: PhotoView(
+                                                                imageProvider:
+                                                                    AssetImage(
+                                                                      img,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Image.asset(
+                                                    img,
+                                                    fit: BoxFit.cover,
+                                                    width: double.infinity,
+                                                  ),
+                                                );
+                                              }).toList(),
                                           carouselController:
                                               _controllerCarouselSlider,
                                           options: CarouselOptions(
@@ -278,28 +305,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           });
                                         },
                                         child: Container(
-                                          padding:
-                                              const EdgeInsets.symmetric(
-                                                horizontal: 16,
-                                                vertical: 8,
-                                              ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 8,
+                                          ),
                                           decoration: BoxDecoration(
                                             color:
-                                                _selectedColor ==
-                                                        color['name']
+                                                _selectedColor == color['name']
                                                     ? const Color(
                                                       0xFF2A4BA0,
                                                     ).withOpacity(0.1)
                                                     : Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
                                             border: Border.all(
                                               color:
                                                   _selectedColor ==
                                                           color['name']
-                                                      ? const Color(
-                                                        0xFF2A4BA0,
-                                                      )
+                                                      ? const Color(0xFF2A4BA0)
                                                       : Colors.grey[300]!,
                                               width:
                                                   _selectedColor ==
@@ -317,8 +341,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                   color: color['value'],
                                                   shape: BoxShape.circle,
                                                   border: Border.all(
-                                                    color:
-                                                        Colors.grey[300]!,
+                                                    color: Colors.grey[300]!,
                                                     width: 1,
                                                   ),
                                                 ),
@@ -331,8 +354,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                       _selectedColor ==
                                                               color['name']
                                                           ? FontWeight.w600
-                                                          : FontWeight
-                                                              .normal,
+                                                          : FontWeight.normal,
                                                   color:
                                                       _selectedColor ==
                                                               color['name']
@@ -349,9 +371,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     },
                                   ),
                                 ),
-                            
+
                                 const SizedBox(height: 24),
-                            
+
                                 // Size Selection
                                 const Text(
                                   'Select Size',
@@ -382,18 +404,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           decoration: BoxDecoration(
                                             color:
                                                 _selectedSize == size
-                                                    ? const Color(
-                                                      0xFF2A4BA0,
-                                                    )
+                                                    ? const Color(0xFF2A4BA0)
                                                     : Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
                                             border: Border.all(
                                               color:
                                                   _selectedSize == size
-                                                      ? const Color(
-                                                        0xFF2A4BA0,
-                                                      )
+                                                      ? const Color(0xFF2A4BA0)
                                                       : Colors.grey[300]!,
                                               width: 1.5,
                                             ),
@@ -415,9 +434,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     },
                                   ),
                                 ),
-                            
+
                                 const SizedBox(height: 24),
-                            
+
                                 // Quantity Selector
                                 const Text(
                                   'Quantity',
@@ -454,12 +473,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           height: 32,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.2),
+                                                color: Colors.grey.withOpacity(
+                                                  0.2,
+                                                ),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),
@@ -489,12 +510,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           height: 32,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.2),
+                                                color: Colors.grey.withOpacity(
+                                                  0.2,
+                                                ),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),
