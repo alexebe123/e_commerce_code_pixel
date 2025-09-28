@@ -321,7 +321,6 @@ class _HomePageState extends State<HomePage> {
     final w = MediaQuery.of(context).size.width;
     final isTablet = w >= 700 && w < 1000;
     final isDesktop = w >= 1000;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -329,7 +328,7 @@ class _HomePageState extends State<HomePage> {
             // Contact Widget
             (isTablet | isDesktop)
                 ? ContactWidget(
-                  width: width,
+                  width: w,
                   isDesktop: isDesktop,
                   isTablet: isTablet,
                 )
@@ -338,7 +337,7 @@ class _HomePageState extends State<HomePage> {
 
             // AppBar Widget
             Container(
-              width: width,
+              width: w,
               height: 80,
               color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -423,7 +422,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             // Carousel Widget
-            CarouselWidget(width: width, imgList: imgList),
+            CarouselWidget(width: w, imgList: imgList),
             const SizedBox(height: 20),
 
             // Filter and Products Section
